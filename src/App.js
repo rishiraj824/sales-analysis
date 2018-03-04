@@ -1,148 +1,226 @@
-import React from 'react';
-import tips from './tips';
-import {sortAs} from 'react-pivottable/Utilities';
-import TableRenderers from 'react-pivottable/TableRenderers';
-import createPlotlyComponent from 'react-plotly.js/factory';
-import createPlotlyRenderers from 'react-pivottable/PlotlyRenderers';
-import PivotTableUI from 'react-pivottable/PivotTableUI';
+import React from 'react'
 import AnyChart from 'anychart-react/dist/anychart-react.min.js'
-import 'react-pivottable/pivottable.css';
-import Dropzone from 'react-dropzone'
-import Papa from 'papaparse'
 import anychart from 'anychart'
+import './App.css'
 
-
-const Plot = createPlotlyComponent(window.Plotly);
-
-class PivotTableUISmartWrapper extends React.PureComponent {
-    constructor(props) {
-        super(props)
-        this.state = { pivotState: props, barchart:[] };
+var dataSet = anychart.data.set([{
+    'id': 'US.MA',
+    'value': 0
+},
+    {
+        'id': 'US.MN',
+        'value': 1
+    },
+    {
+        'id': 'US.MT',
+        'value': 2
+    },
+    {
+        'id': 'US.ND',
+        'value': 3
+    },
+    {
+        'id': 'US.HI',
+        'value': 4
+    },
+    {
+        'id': 'US.ID',
+        'value': 5
+    },
+    {
+        'id': 'US.WA',
+        'value': 6
+    },
+    {
+        'id': 'US.AZ',
+        'value': 7
+    },
+    {
+        'id': 'US.CA',
+        'value': 8
+    },
+    {
+        'id': 'US.CO',
+        'value': 9
+    },
+    {
+        'id': 'US.NV',
+        'value': 10
+    },
+    {
+        'id': 'US.NM',
+        'value': 11
+    },
+    {
+        'id': 'US.OR',
+        'value': 12
+    },
+    {
+        'id': 'US.UT',
+        'value': 13
+    },
+    {
+        'id': 'US.WY',
+        'value': 14
+    },
+    {
+        'id': 'US.AR',
+        'value': 15
+    },
+    {
+        'id': 'US.IA',
+        'value': 16
+    },
+    {
+        'id': 'US.KS',
+        'value': 17
+    },
+    {
+        'id': 'US.MO',
+        'value': 18
+    },
+    {
+        'id': 'US.NE',
+        'value': 19
+    },
+    {
+        'id': 'US.OK',
+        'value': 20
+    },
+    {
+        'id': 'US.SD',
+        'value': 21
+    },
+    {
+        'id': 'US.LA',
+        'value': 22
+    },
+    {
+        'id': 'US.TX',
+        'value': 23
+    },
+    {
+        'id': 'US.CT',
+        'value': 24
+    },
+    {
+        'id': 'US.NH',
+        'value': 25
+    },
+    {
+        'id': 'US.RI',
+        'value': 26
+    },
+    {
+        'id': 'US.VT',
+        'value': 27
+    },
+    {
+        'id': 'US.AL',
+        'value': 28
+    },
+    {
+        'id': 'US.FL',
+        'value': 29
+    },
+    {
+        'id': 'US.GA',
+        'value': 30
+    },
+    {
+        'id': 'US.MS',
+        'value': 31
+    },
+    {
+        'id': 'US.SC',
+        'value': 32
+    },
+    {
+        'id': 'US.IL',
+        'value': 33
+    },
+    {
+        'id': 'US.IN',
+        'value': 34
+    },
+    {
+        'id': 'US.KY',
+        'value': 35
+    },
+    {
+        'id': 'US.NC',
+        'value': 36
+    },
+    {
+        'id': 'US.OH',
+        'value': 37
+    },
+    {
+        'id': 'US.TN',
+        'value': 38
+    },
+    {
+        'id': 'US.VA',
+        'value': 39
+    },
+    {
+        'id': 'US.WI',
+        'value': 40
+    },
+    {
+        'id': 'US.WV',
+        'value': 41
+    },
+    {
+        'id': 'US.DE',
+        'value': 42
+    },
+    {
+        'id': 'US.MD',
+        'value': 43
+    },
+    {
+        'id': 'US.NJ',
+        'value': 44
+    },
+    {
+        'id': 'US.NY',
+        'value': 45
+    },
+    {
+        'id': 'US.PA',
+        'value': 46
+    },
+    {
+        'id': 'US.ME',
+        'value': 47
+    },
+    {
+        'id': 'US.MI',
+        'value': 48
+    },
+    {
+        'id': 'US.AK',
+        'value': 49
     }
+]);
 
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({pivotState: nextProps});
-    }
-
-    render() {
-        return <PivotTableUI
-            renderers={Object.assign({}, TableRenderers, createPlotlyRenderers(Plot))}
-            {...this.state.pivotState} onChange={s => this.setState({pivotState: s})}
-            unusedOrientationCutoff={Infinity}
-             />;
-    }
-}
+// please do not forget to include the map to your html file (<head> section)
+// <script src="path/to/node_modules/anychart/dist/geodata/countries/australia/australia.js"></script>
 
 export default class App extends React.Component {
-    componentWillMount() {
-        this.setState({
-            mode: "demo",
-            filename: "Sample Dataset: Tips",
-            pivotState: {
-                data: tips,
-                rows: ["Payer Gender"], cols: ["Party Size"],
-                aggregatorName: "Sum over Sum", vals: ["Tip", "Total Bill"],
-                rendererName: "Grouped Column Chart",
-                sorters: {
-                    "Meal": sortAs(["Lunch", "Dinner"]),
-                    "Day of Week": sortAs(["Thursday", "Friday", "Saturday", "Sunday"])},
-                plotlyOptions: {width: 900, height: 500}
-            }
-        });
-    }
 
-    onDrop(files) {
-        this.setState({
-            mode: "thinking",
-            filename: "(Parsing CSV...)",
-            textarea: "",
-            pivotState: { data: [] }
-        }, () => Papa.parse(files[0], {
-            skipEmptyLines: true,
-            error: (e) => alert(e),
-            complete: (parsed) => {
-              this.setState({
-                mode: "file",
-                filename: files[0].name,
-                pivotState: { data: parsed.data }
-            })
-            this.plotBarChart(parsed.data)
-            } 
-          })
-        );
-    }
-    plotBarChart=(pivotState)=>{
-      let salesData = []
-      var chart = anychart.stock()
-      for(let i=0; i<10; i++){
-        let data = [];
-        console.log(pivotState[i])
-        data = [pivotState[i][2],pivotState[i][17]]
-        salesData.push(data);
-      }
-      var salesDataTable = anychart.data.table();
-      salesDataTable.addData(salesData); 
-      // var secondPlot = chart.plot(0);
-      // secondPlot.splineArea(salesDataTable.mapAs({'value': 4})).fill('#1976d2 0.65').stroke('1.5 #1976d2').name('Sales');
-      this.setState({
-        barchart: salesData
-      })
-    }
-
-    onType(event) {
-        Papa.parse(event.target.value, {
-            skipEmptyLines: true,
-            error: (e) => alert(e),
-            complete: (parsed) => {
-            this.setState({
-                mode: "text",
-                filename: "Data from <textarea>",
-                textarea: event.target.value,
-                pivotState: { data: parsed.data },
-            })
-
-            this.plotBarChart(parsed.data)
-            console.log(parsed)
-          }
-        });
-    }
-
-    render() {
-        return (<div>
-            <div className="row text-center">
-                <div className="col-md-3 col-md-offset-3">
-                <p>Try it right now on a file...</p>
-                <Dropzone onDrop={this.onDrop.bind(this)} accept="text/csv" className="dropzone"
-                activeClassName="dropzoneActive" rejectClassName="dropzoneReject" >
-                    <p>Drop a CSV file here, or click to choose a file from your computer.</p>
-                </Dropzone>
-                </div>
-                <div className="col-md-3 text-center">
-                <p>...or paste some data:</p>
-                <textarea value={this.state.textarea} onChange={this.onType.bind(this)}
-                    placeholder="Paste from a spreadsheet or CSV-like file"/>
-                </div>
-            </div>
-            <div className="row text-center">
-                <p><em>Note: the data never leaves your browser!</em></p>
-                <br />
-            </div>
-            <div className="row">
-                <h2 className="text-center">{this.state.filename}</h2>
-                <br />
-                <PivotTableUISmartWrapper {...this.state.pivotState} />
-            </div>
-            <div className="row">
-              <AnyChart width={800} height={600} title="Tab1 chart" type="pie" data={[5, 3, 3, 5]}/>
-            </div>
-            <div className="row">
-              <AnyChart width={800} height={600} title="Tab3 chart" type="line" data={"P1,5\nP2,3\nP3,6\nP4,4"}/>
-            </div>
-            <div className="row">
-              <AnyChart legend={this.state.legend} width={800} height={600} title="Revenue Chart" type="column" 
-            data={this.state.barchart}/>
-            </div>
-        </div>);
+  render() {
+    return (
+        <div className="america">
+        <AnyChart
+            width={800}
+            height={600}
+            type="choropleth"
+            data={dataSet}
+            title="USA Census"
+            geoData="anychart.maps.united_states_of_america"
+        /></div>)
     }
 }
